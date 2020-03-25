@@ -24,7 +24,7 @@ def crop_image(img, size):
     
     return img[starty:starty + size, startx: startx + size]
 
-def preprocess_full(imgdir, outdir, size=512):
+def preprocess(imgdir, outdir, size=512):
     "full preprocessing, takes input and output directory"
     files = sorted(os.listdir(imgdir))
     num_imgs = len(files)
@@ -44,4 +44,4 @@ def preprocess_full(imgdir, outdir, size=512):
         imwrite(output_path, final_img)
 
 if __name__ == '__main__':
-    preprocess_full('Images/Images', 'Images/Cropped')
+    preprocess('Images/Images', 'Images/Cropped')
