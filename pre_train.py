@@ -37,9 +37,12 @@ def prepare(imgdir, outputdir):
     images -= np.mean(images)
     images /= np.std(images)
 
+    images = images.reshape((images.shape[0], images.shape[1],
+                            images.shape[2], 1))
+
     np.save(outputdir + '_images.npy', images)
     np.save(outputdir + '_labels.npy', labels)
     np.save(outputdir + '_patientid.npy', names)
 
 if __name__ == '__main__':
-    prepare('test_output', 'test')
+    prepare('Images/Cropped', 'full')
