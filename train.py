@@ -46,7 +46,7 @@ def train_net(training, test, size=512, epochs=100, batch_size=10):
     )
 
     #next_training = training_set.make_one_shot_iterator().get_next()
-    next_training = tf.compat.v1.data.make_one_shot_iterator(training_set).get_next()
+    # next_training = tf.compat.v1.data.make_one_shot_iterator(training_set).get_next()
 
     inp_var, labels_var, output = net.generate_network(size)
     error_fn, train_fn, metrics = net.generate_functions(inp_var,
@@ -60,12 +60,12 @@ def train_net(training, test, size=512, epochs=100, batch_size=10):
             sess.run(tf.compat.v1.global_variables_initializer())
 
             for epoch in range(epochs):
-
+                next_training = tf.compat.v1.data.make_one_shot_iterator(training_set).get_next()
                 sess.run(tf.compat.v1.local_variables_initializer())
 
                 accuracy_fn, accuracy_update = metrics['accuracy']
                 auc_fn, auc_update = metrics['AUC']
-                print('accuracy_fn')
+                # print('accuracy_fn')
                 for batch in range(epoch_size):
                     batch_images, batch_labels = sess.run(next_training)
 
@@ -91,8 +91,8 @@ def train_net(training, test, size=512, epochs=100, batch_size=10):
                     'Epoch {:>3} | Acc: {:>5.3f} (Test: {:>5.3f}) | AUC: {:>5.3f} (Test: {:>5.3f})'
                     .format(epoch, accuracy, test_accuracy, auc, test_auc)
             )
-        except tf.errors.OutOfRangeError:
-            print('oops')
+        except tf.errors.OutOfRangeError as error:
+            print(error)
             pass
 
 
