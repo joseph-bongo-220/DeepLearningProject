@@ -6,7 +6,7 @@ import net
 from datetime import datetime
 import random
 
-tf.compat.v1.disable_eager_execution()
+#tf.compat.v1.disable_eager_execution()
 
 print('python3 -m tensorboard.main --logdir=./logs/')
 
@@ -40,20 +40,16 @@ def train_net(training, test, size=512, epochs=100, batch_size=10):
     training_set = (
         tf.data.Dataset.from_tensor_slices((X_train, y_train))
             .shuffle(buffer_size=X_train.shape[0])
-#            .map(lambda im, lab: tf.py_function(augment, [im, lab, size], [im.dtype, lab.dtype]), num_parallel_calls=4)
             .batch(batch_size)
         .prefetch(1)
     )
-
-    #next_training = training_set.make_one_shot_iterator().get_next()
-    # next_training = tf.compat.v1.data.make_one_shot_iterator(training_set).get_next()
 
     inp_var, labels_var, output = net.generate_network(size)
     error_fn, train_fn, metrics = net.generate_functions(inp_var,
                                                          labels_var,
                                                          output)
 
-    config = tf.compat.v1.ConfigProto()
+#    config = tf.compat.v1.ConfigProto()
     print('1') 
     with tf.compat.v1.Session(config=config) as sess:
         try:
@@ -95,16 +91,3 @@ def train_net(training, test, size=512, epochs=100, batch_size=10):
             print(error)
             pass
 
-
-def augment(image, labe, size):
-
-    max_displacement = image.shape[0] - size
-    displacement_x = int(random.random() * max_displacement)
-    displacement_y = int(random.random() * max_displacement)
-
-    image = image[displacement_y:displacement_y+size,
-                  displacement_x:displacement_x+size]
-
-    return image, label
-
-train('test')
